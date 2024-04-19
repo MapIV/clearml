@@ -4,7 +4,7 @@ from copy import deepcopy
 from time import sleep
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any, Callable, Optional, Union, Generator, List, Type
-from zipfile import ZipFile, ZIP_DEFLATED
+from zipfile import ZipFile, ZIP_STORED
 from six.moves.queue import PriorityQueue, Queue, Empty
 from pathlib2 import Path
 from tempfile import mkstemp
@@ -337,7 +337,7 @@ class ParallelZipper(object):
         chunk_size,  # type: int
         max_workers,  # type: int
         allow_zip_64=True,  # type: Optional[bool]
-        compression=ZIP_DEFLATED,  # type: Optional[Any]
+        compression=ZIP_STORED,  # type: Optional[Any]
         zip_prefix="",  # type: Optional[str]
         zip_suffix="",  # type: Optional[str]
         verbose=False,  # type: Optional[bool]

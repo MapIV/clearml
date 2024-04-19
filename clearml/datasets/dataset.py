@@ -12,7 +12,7 @@ from multiprocessing.pool import ThreadPool
 from concurrent.futures import ThreadPoolExecutor
 from tempfile import mkdtemp
 from typing import Union, Optional, Sequence, List, Dict, Any, Mapping, Tuple
-from zipfile import ZIP_DEFLATED
+from zipfile import ZIP_STORED
 
 from attr import attrs, attrib
 from pathlib2 import Path
@@ -694,7 +694,7 @@ class Dataset(object):
                 chunk_size,
                 max_workers,
                 allow_zip_64=True,
-                compression=ZIP_DEFLATED if compression is None else compression,
+                compression=ZIP_STORED if compression is None else compression,
                 zip_prefix="dataset.{}.".format(self._id),
                 zip_suffix=".zip",
                 verbose=verbose,

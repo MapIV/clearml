@@ -9,7 +9,7 @@ import warnings
 from argparse import ArgumentParser
 from logging import getLogger
 from tempfile import mkstemp, mkdtemp
-from zipfile import ZipFile, ZIP_DEFLATED
+from zipfile import ZipFile, ZIP_STORED
 
 try:
     # noinspection PyCompatibility
@@ -251,8 +251,7 @@ class Task(_Task):
             auto_resource_monitoring=True,  # type: bool
             auto_connect_streams=True,  # type: Union[bool, Mapping[str, bool]]
             deferred_init=False,  # type: bool
-    ):
-        # type: (...) -> TaskInstance
+    ) -> "Task":
         """
         Creates a new Task (experiment) if:
 
@@ -820,8 +819,7 @@ class Task(_Task):
             base_task_id=None,  # type: Optional[str]
             add_task_init_call=True,  # type: bool
             force_single_script_file=False,  # type: bool
-    ):
-        # type: (...) -> TaskInstance
+    ) -> "Task":
         """
         Manually create and populate a new Task (experiment) in the system.
         If the code does not already contain a call to ``Task.init``, pass add_task_init_call=True,
@@ -918,8 +916,7 @@ class Task(_Task):
             tags=None,  # type: Optional[Sequence[str]]
             allow_archived=True,  # type: bool
             task_filter=None  # type: Optional[dict]
-    ):
-        # type: (...) -> TaskInstance
+    ) -> "Task":
         """
         Get a Task by ID, or project name / task name combination.
 
@@ -1282,8 +1279,7 @@ class Task(_Task):
             comment=None,  # type: Optional[str]
             parent=None,  # type: Optional[str]
             project=None,  # type: Optional[str]
-    ):
-        # type: (...) -> TaskInstance
+    ) -> "Task":
         """
         Create a duplicate (a clone) of a Task (experiment). The status of the cloned Task is ``Draft``
         and modifiable.
@@ -1479,8 +1475,7 @@ class Task(_Task):
         resp = res.response
         return resp
 
-    def set_progress(self, progress):
-        # type: (int) -> ()
+    def set_progress(self, progress: int) -> None:
         """
         Sets Task's progress (0 - 100)
         Progress is a field computed and reported by the user.
@@ -1581,8 +1576,7 @@ class Task(_Task):
 
         raise Exception('Unsupported mutable type %s: no connect function found' % type(mutable).__name__)
 
-    def set_packages(self, packages):
-        # type: (Union[str, Path, Sequence[str]]) -> ()
+    def set_packages(self, packages: Union[str, Path, Sequence[str]]) -> None:
         """
         Manually specify a list of required packages or a local requirements.txt file. Note that this will
         overwrite all existing packages.
@@ -1608,8 +1602,7 @@ class Task(_Task):
         # noinspection PyProtectedMember
         self._update_requirements(packages or "")
 
-    def set_repo(self, repo=None, branch=None, commit=None):
-        # type: (Optional[str], Optional[str], Optional[str]) -> ()
+    def set_repo(self, repo: Optional[str] = None, branch: Optional[str] = None, commit: Optional[str] = None) -> None:
         """
         Specify a repository to attach to the function.
         Allow users to execute the task inside the specified repository, enabling them to load modules/script
@@ -2037,8 +2030,7 @@ class Task(_Task):
 
         return current_conf
 
-    def mark_started(self, force=False):
-        # type: (bool) -> ()
+    def mark_started(self, force: bool = False) -> None:
         """
         Manually mark a Task as started (happens automatically)
 
@@ -2048,8 +2040,7 @@ class Task(_Task):
         self.started(force=force)
         self.reload()
 
-    def mark_stopped(self, force=False, status_message=None):
-        # type: (bool, Optional[str]) -> ()
+    def mark_stopped(self, force: bool = False, status_message: Optional[str] = None) -> None:
         """
         Manually mark a Task as stopped (also used in :meth:`_at_exit`)
 
@@ -2509,8 +2500,7 @@ class Task(_Task):
         """
         return self._get_model_config_dict()
 
-    def set_model_label_enumeration(self, enumeration=None):
-        # type: (Optional[Mapping[str, int]]) -> ()
+    def set_model_label_enumeration(self, enumeration: Optional[Mapping[str, int]] = None) -> None:
         """
         Set the label enumeration for the Task object before creating an output model.
         Later, when creating an output model, the model will inherit these properties.
@@ -2817,8 +2807,7 @@ class Task(_Task):
             docker_image=None,  # type: Optional[str]
             docker_arguments=None,  # type: Optional[Union[str, Sequence[str]]]
             docker_setup_bash_script=None  # type: Optional[Union[str, Sequence[str]]]
-    ):
-        # type: (...) -> ()
+    ) -> None:
         """
         Set the base docker image for this experiment
         If provided, this value will be used by clearml-agent to execute this experiment
@@ -3027,11 +3016,10 @@ class Task(_Task):
 
     def wait_for_status(
             self,
-            status=(_Task.TaskStatusEnum.completed, _Task.TaskStatusEnum.stopped, _Task.TaskStatusEnum.closed),
-            raise_on_status=(_Task.TaskStatusEnum.failed,),
-            check_interval_sec=60.,
-    ):
-        # type: (Iterable[Task.TaskStatusEnum], Optional[Iterable[Task.TaskStatusEnum]], float) -> ()
+            status: Iterable[_Task.TaskStatusEnum] = (_Task.TaskStatusEnum.completed, _Task.TaskStatusEnum.stopped, _Task.TaskStatusEnum.closed),
+            raise_on_status: Optional[Iterable[_Task.TaskStatusEnum]] = (_Task.TaskStatusEnum.failed,),
+            check_interval_sec: float = 60.,
+    ) -> None:
         """
         Wait for a task to reach a defined status.
 
@@ -3464,8 +3452,7 @@ class Task(_Task):
                     f.write('\n'.join(lines[1:-1]))
 
     @classmethod
-    def debug_simulate_remote_task(cls, task_id, reset_task=False):
-        # type: (str, bool) -> ()
+    def debug_simulate_remote_task(cls, task_id: str, reset_task: bool = False) -> None:
         """
         Simulate remote execution of a specified Task.
         This call will simulate the behaviour of your Task as if executed by the ClearML-Agent
@@ -3567,8 +3554,7 @@ class Task(_Task):
         # noinspection PyProtectedMember
         return OutputModel._text_to_config_dict(config_text)
 
-    def _set_startup_info(self):
-        # type: () -> ()
+    def _set_startup_info(self) -> None:
         self._set_runtime_properties(
             runtime_properties={"CLEARML VERSION": self.session.client, "CLI": sys.argv[0], "progress": "0"}
         )
@@ -4299,7 +4285,7 @@ class Task(_Task):
                 # create zip file
                 offline_folder = self.get_offline_mode_folder()
                 zip_file = offline_folder.as_posix() + '.zip'
-                with ZipFile(zip_file, 'w', allowZip64=True, compression=ZIP_DEFLATED) as zf:
+                with ZipFile(zip_file, 'w', allowZip64=True, compression=ZIP_STORED) as zf:
                     for filename in offline_folder.rglob('*'):
                         if filename.is_file():
                             relative_file_name = filename.relative_to(offline_folder).as_posix()

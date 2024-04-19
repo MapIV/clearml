@@ -12,7 +12,7 @@ from multiprocessing.pool import ThreadPool
 from tempfile import mkdtemp, mkstemp
 from threading import Thread
 from time import time
-from zipfile import ZipFile, ZIP_DEFLATED
+from zipfile import ZipFile, ZIP_STORED
 
 import six
 from PIL import Image
@@ -617,7 +617,7 @@ class Artifacts(object):
                     artifact_type_data.content_type = 'application/zip'
                     archive_preview = 'Archive content {}:\n'.format(artifact_object.as_posix())
 
-                    with ZipFile(zip_file, 'w', allowZip64=True, compression=ZIP_DEFLATED) as zf:
+                    with ZipFile(zip_file, 'w', allowZip64=True, compression=ZIP_STORED) as zf:
                         for filename in sorted(files):
                             if filename.is_file():
                                 relative_file_name = filename.relative_to(folder).as_posix()
@@ -664,7 +664,7 @@ class Artifacts(object):
                 artifact_type_data.content_type = 'application/zip'
                 archive_preview = 'Archive content:\n'
 
-                with ZipFile(zip_file, 'w', allowZip64=True, compression=ZIP_DEFLATED) as zf:
+                with ZipFile(zip_file, 'w', allowZip64=True, compression=ZIP_STORED) as zf:
                     for filename in sorted(list_files):
                         if filename.is_file():
                             relative_file_name = filename.relative_to(Path(common_path)).as_posix() \
