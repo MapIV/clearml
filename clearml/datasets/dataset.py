@@ -867,7 +867,7 @@ class Dataset(object):
                 )
 
     def get_metadata(self, metadata_name='metadata'):
-        # type: (str) -> Optional[numpy.array, pd.DataFrame, dict, str, bool] # noqa: F821
+        # type: (str) -> Optional[Union[numpy.array, pd.DataFrame, dict, str, bool]] # noqa: F821
         """
         Get attached metadata back in its original format. Will return None if none was found.
         """
