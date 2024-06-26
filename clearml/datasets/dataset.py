@@ -1881,7 +1881,7 @@ class Dataset(object):
         squashed_ds.add_files(temp_folder)
         for ds in datasets:
             squashed_ds._dataset_link_entries.update(ds._dataset_link_entries)
-        squashed_ds.upload(output_url=output_url)
+        squashed_ds.upload(output_url=output_url, compression=ZIP_STORED)
         squashed_ds.finalize()
         return squashed_ds
 
